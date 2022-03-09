@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const app = express();
 
 dotenv.config();
+app.use(express.json());
 
 mongoose
   .connect(process.env.MONGO_URL)
