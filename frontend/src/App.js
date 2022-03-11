@@ -1,5 +1,5 @@
-import Map from "react-map-gl";
 import React from "react";
+import Map from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
 const App = () => {
@@ -12,10 +12,10 @@ const App = () => {
   return (
     <Map
       {...viewState}
-      style={{ width: 400, height: 400}}
-      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      style={{ width: 400, height: 400 }}
       onMove={(evt) => setViewState(evt.viewState)}
-      mapStyle="mapbox://styles/mapbox/streets-v9"
+      mapStyle="mapbox://styles/yoshino9397/cl0lvkbjj000e14qrtge2zsss"
+      mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
     />
   );
 };
