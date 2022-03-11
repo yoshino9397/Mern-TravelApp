@@ -9,12 +9,15 @@ import StarIcon from "@mui/icons-material/Star";
 
 const App = () => {
   const currentUser = "Yoshino";
+  const [newPlace, setNewPlace] = useState(null);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [pins, setPins] = useState([]);
   const [viewState, setViewState] = React.useState({
     longitude: 12,
     latitude: 55,
     zoom: 4,
+    bearing: 0,
+    pitch: 50,
   });
 
   useEffect(() => {
@@ -31,15 +34,25 @@ const App = () => {
 
   const handleMarkerClick = (id, lat, long) => {
     setCurrentPlaceId(id);
+    setViewState({ ...viewState, latitude: lat, longitude: long });
+    ///Even if you click the pin at the edge of the screen, it will move to the center!
+  };
+  const handleAddClick = (e) => {
+    const [longitude, latitude] = e.lngLat;
+    setNewPlace({
+      lat: latitude,
+      long: longitude,
+    });
   };
 
   return (
     <Map
       {...viewState}
-      style={{ width: "100vw", height: "100vh" }}
+      style={{ width: "100vw", height: "100vh", transitionDuration: 200 }}
       onMove={(evt) => setViewState(evt.viewState)}
       mapStyle="mapbox://styles/yoshino9397/cl0lvkbjj000e14qrtge2zsss"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      onContextMenu={handleAddClick}
     >
       {pins.map((p) => (
         <>
@@ -83,6 +96,34 @@ const App = () => {
           )}
         </>
       ))}
+      {newPlace && (
+        <Popup
+          longitude={newPlace.long}
+          latitude={newPlace.lat}
+          anchor="left"
+          // onClose={() => setCurrentPlaceId(null)}
+        >
+          <div>
+            <form>
+              <label>Title</label>
+              <input placeholder="enter a title" type="text" />
+              <label>Review</label>
+              <textarea placeholder="Say us something about this place" />
+              <label>Rating</label>
+              <select>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <button className="submitButton" type="submit">
+                Add Pin
+              </button>
+            </form>
+          </div>
+        </Popup>
+      )}
     </Map>
   );
 };
