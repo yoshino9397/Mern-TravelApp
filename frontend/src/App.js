@@ -7,15 +7,21 @@ import "./app.css";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import StarIcon from "@mui/icons-material/Star";
 import Register from "./components/Register";
+import Login from "./components/Login";
 
 const App = () => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const myStorage = window.localStorage;
+  const [currentUsername, setCurrentUsername] = useState(
+    myStorage.getItem("user")
+  );
   const [newPlace, setNewPlace] = useState(null);
   const [title, setTitle] = useState(null);
   const [desc, setDesc] = useState(null);
   const [star, setStar] = useState(0);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [pins, setPins] = useState([]);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [viewState, setViewState] = React.useState({
     longitude: 12,
     latitude: 55,
@@ -53,7 +59,7 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newPin = {
-      username: currentUser,
+      username: currentUsername,
       title,
       desc,
       rating: star,
@@ -68,6 +74,12 @@ const App = () => {
       console.log(err);
     }
   };
+
+  const handleLogout = () => {
+    setCurrentUsername(null);
+    myStorage.removeItem("user");
+  };
+
   return (
     <Map
       {...viewState}
@@ -93,7 +105,7 @@ const App = () => {
             <PushPinIcon
               sx={{
                 fontSize: viewState.zoom * 7,
-                color: currentUser === p.username ? "tomato" : "#4b666e",
+                color: currentUsername === p.username ? "tomato" : "#4b666e",
                 cursor: "pointer",
               }}
               onClick={() => handleMarkerClick(p._id, p.lat, p.long)}
@@ -160,15 +172,40 @@ const App = () => {
           </div>
         </Popup>
       )}
-      {currentUser ? (
-        <button className="button logout">Log out</button>
+      {currentUsername ? (
+        <button className="button logout" onClick={handleLogout}>
+          Log out
+        </button>
       ) : (
         <div className="buttons">
-          <button className="button login">Login</button>
-          <button className="button register">Register</button>
+          <button
+            className="button login"
+            onClick={() => {
+              setShowLogin(true);
+              setShowRegister(false);
+            }}
+          >
+            Login
+          </button>
+          <button
+            className="button register"
+            onClick={() => {
+              setShowRegister(true);
+              setShowLogin(false);
+            }}
+          >
+            Register
+          </button>
         </div>
       )}
-      <Register />
+      {showRegister && <Register setShowRegister={setShowRegister} />}
+      {showLogin && (
+        <Login
+          setShowLogin={setShowLogin}
+          myStorage={myStorage}
+          setCurrentUsername={setCurrentUsername}
+        />
+      )}
     </Map>
   );
 };
