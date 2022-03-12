@@ -6,10 +6,14 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./app.css";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import StarIcon from "@mui/icons-material/Star";
+import Register from "./components/Register";
 
 const App = () => {
-  const currentUser = "Yoshino";
+  const [currentUser, setCurrentUser] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [desc, setDesc] = useState(null);
+  const [star, setStar] = useState(0);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [pins, setPins] = useState([]);
   const [viewState, setViewState] = React.useState({
@@ -37,15 +41,33 @@ const App = () => {
     setViewState({ ...viewState, latitude: lat, longitude: long });
     ///Even if you click the pin at the edge of the screen, it will move to the center!
   };
-//////////---------------------------------Something wrong here---------------------////////////////////
+
   const handleAddClick = (e) => {
-    const [longitude, latitude] = e.lngLat;
+    const { lng, lat } = e.lngLat;
     setNewPlace({
-      lat: latitude,
-      long: longitude,
+      lat: lat,
+      long: lng,
     });
   };
-//////////------------------------------------------------------////////////////////
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newPin = {
+      username: currentUser,
+      title,
+      desc,
+      rating: star,
+      lat: newPlace.lat,
+      long: newPlace.long,
+    };
+    try {
+      const res = await axios.post("/pins", newPin);
+      setPins([...pins, res.data]);
+      setNewPlace(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <Map
       {...viewState}
@@ -57,13 +79,17 @@ const App = () => {
       onMove={(evt) => setViewState(evt.viewState)}
       mapStyle="mapbox://styles/yoshino9397/cl0lvkbjj000e14qrtge2zsss"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-      /////-----------Here----------------///////
-      onContextMenu={handleAddClick}
-      /////---------------------------///////
+      onDblClick={handleAddClick}
     >
       {pins.map((p) => (
         <>
-          <Marker longitude={p.long} latitude={p.lat} anchor="bottom">
+          <Marker
+            longitude={p.long}
+            latitude={p.lat}
+            anchor="bottom"
+            offsetLeft={-3.5 * viewState.zoom}
+            offsetTop={-7 * viewState.zoom}
+          >
             <PushPinIcon
               sx={{
                 fontSize: viewState.zoom * 7,
@@ -87,11 +113,7 @@ const App = () => {
                 <p className="desc">{p.desc}</p>
                 <label>Rating</label>
                 <div className="stars">
-                  <StarIcon className="star" />
-                  <StarIcon className="star" />
-                  <StarIcon className="star" />
-                  <StarIcon className="star" />
-                  <StarIcon className="star" />
+                  {Array(p.rating).fill(<StarIcon className="star" />)}
                 </div>
                 <label>Info</label>
                 <span className="username">
@@ -111,13 +133,20 @@ const App = () => {
           // onClose={() => setCurrentPlaceId(null)}
         >
           <div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <label>Title</label>
-              <input placeholder="enter a title" type="text" />
+              <input
+                placeholder="enter a title"
+                type="text"
+                onChange={(e) => setTitle(e.target.value)}
+              />
               <label>Review</label>
-              <textarea placeholder="Say us something about this place" />
+              <textarea
+                placeholder="Say us something about this place"
+                onChange={(e) => setDesc(e.target.value)}
+              />
               <label>Rating</label>
-              <select>
+              <select onChange={(e) => setStar(e.target.value)}>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -131,6 +160,15 @@ const App = () => {
           </div>
         </Popup>
       )}
+      {currentUser ? (
+        <button className="button logout">Log out</button>
+      ) : (
+        <div className="buttons">
+          <button className="button login">Login</button>
+          <button className="button register">Register</button>
+        </div>
+      )}
+      <Register />
     </Map>
   );
 };
