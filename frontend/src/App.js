@@ -37,6 +37,7 @@ const App = () => {
     setViewState({ ...viewState, latitude: lat, longitude: long });
     ///Even if you click the pin at the edge of the screen, it will move to the center!
   };
+//////////---------------------------------Something wrong here---------------------////////////////////
   const handleAddClick = (e) => {
     const [longitude, latitude] = e.lngLat;
     setNewPlace({
@@ -44,15 +45,21 @@ const App = () => {
       long: longitude,
     });
   };
-
+//////////------------------------------------------------------////////////////////
   return (
     <Map
       {...viewState}
-      style={{ width: "100vw", height: "100vh", transitionDuration: 200 }}
+      style={{
+        width: "100vw",
+        height: "100vh",
+        transitionDuration: 200,
+      }}
       onMove={(evt) => setViewState(evt.viewState)}
       mapStyle="mapbox://styles/yoshino9397/cl0lvkbjj000e14qrtge2zsss"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+      /////-----------Here----------------///////
       onContextMenu={handleAddClick}
+      /////---------------------------///////
     >
       {pins.map((p) => (
         <>
