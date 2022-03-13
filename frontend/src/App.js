@@ -89,7 +89,7 @@ const App = () => {
         transitionDuration: 200,
       }}
       onMove={(evt) => setViewState(evt.viewState)}
-      mapStyle="mapbox://styles/yoshino9397/cl0lvkbjj000e14qrtge2zsss"
+      mapStyle="mapbox://styles/yoshino9397/cl0owdyvc000a14ktyjdqkavl"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
       onDblClick={handleAddClick}
     >
@@ -120,7 +120,7 @@ const App = () => {
             >
               <div className="card">
                 <label>Place</label>
-                <h4 className="place">{p.title}</h4>
+                <h3 className="place">{p.title}</h3>
                 <label>Review</label>
                 <p className="desc">{p.desc}</p>
                 <label>Rating</label>
