@@ -23,30 +23,34 @@
   cursor: pointer;
 }
 
-.logo {
+.logoRegister {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: slateblue;
+  color: #965695;
   font-weight: 700;
+  margin-bottom: 10%;
 }
-
+.titleRegister {
+  font-size: 22px;
+  text-align: center;
+}
 .registerBtn {
   border: none;
   padding: 5px;
-  background-color: slateblue;
+  background-color:#965695;
   color: white;
   cursor: pointer;
 }
 
 .success {
-  font-size: 12px;
+  font-size: 15px;
   color: green;
   text-align: center;
 }
 
 .failure {
-  font-size: 12px;
+  font-size: 15px;
   color: red;
   text-align: center;
 }

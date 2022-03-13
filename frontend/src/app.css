@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap");
 .card {
   width: 250px;
   height: 250px;
@@ -9,17 +10,17 @@
 label {
   width: max-content;
   color: rgb(37, 107, 155);
-  font-size: 13px;
+  font-size: 17px;
   border-bottom: 0.5px solid rgb(37, 107, 155);
   margin: 3px 0;
 }
 
 .desc {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .star {
-  color: rgb(252, 219, 128);
+  color: #be6f6d;
 }
 
 .username {
@@ -78,25 +79,33 @@ textarea {
 
 .button {
   border: none;
-  padding: 5px;
-  border-radius: 5px;
+  padding: 10px;
+  border-radius: 2px;
   color: white;
-  font-weight: 500;
   cursor: pointer;
+  font-size: 20px;
+  font-family: "Nanum Gothic Coding", monospace;
 }
 
 .button:focus {
   outline: none;
 }
 .logout {
-  background-color: tomato;
+  background-color: #fe464e;
 }
-
+.logout:hover {
+  background-color: #c45d62;
+}
 .login {
-  background-color: teal;
+  background-color: #ba3341;
   margin-right: 10px;
 }
-
+.login:hover {
+  background-color: #d46974;
+}
 .register {
-  background-color: slateblue;
+  background-color: #7672b3;
+}
+.register:hover {
+  background-color: #9c98db;
 }

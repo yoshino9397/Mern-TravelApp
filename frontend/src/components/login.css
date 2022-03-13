@@ -27,19 +27,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgb(45, 131, 88);
+  color: #d43256;
   font-weight: 700;
+  margin-bottom: 10%;
 }
-
+.title {
+  font-size: 22px;
+  text-align: center;
+}
 .loginBtn {
   border: none;
   padding: 5px;
-  background-color: rgb(90, 205, 190);
+  background-color: #d43256;
   color: white;
   cursor: pointer;
 }
 .failure {
-  font-size: 12px;
+  font-size: 15px;
   color: red;
   text-align: center;
 }

@@ -28,8 +28,8 @@ const Login = ({ setShowLogin, myStorage, setCurrentUsername }) => {
   return (
     <div className="loginContainer">
       <div className="logo">
-        <PushPinIcon className="logoIcon" />
-        <span>YoshinoPin</span>
+        <PushPinIcon />
+        <span className="title">Your Big World</span>
       </div>
       <form onSubmit={handleSubmit}>
         <input autoFocus placeholder="username" ref={usernameRef} />

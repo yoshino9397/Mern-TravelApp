@@ -30,9 +30,9 @@ const Register = ({ setShowRegister }) => {
 
   return (
     <div className="registerContainer">
-      <div className="logo">
+      <div className="logoRegister">
         <PushPinIcon />
-        YoshinoPin
+        <span className="titleRegister">Your Big World</span>
       </div>
 
       <form onSubmit={handleSubmit}>
