@@ -116,7 +116,8 @@ const App = () => {
               longitude={p.long}
               latitude={p.lat}
               anchor="left"
-              // onClose={() => setCurrentPlaceId(null)}
+              closeOnClick={false}
+              onClose={() => setCurrentPlaceId(null)}
             >
               <div className="card">
                 <label>Place</label>
@@ -142,7 +143,9 @@ const App = () => {
           longitude={newPlace.long}
           latitude={newPlace.lat}
           anchor="left"
-          // onClose={() => setCurrentPlaceId(null)}
+          closeButton={true}
+          closeOnClick={false}
+          onClose={() => setNewPlace(null)}
         >
           <div>
             <form onSubmit={handleSubmit}>
