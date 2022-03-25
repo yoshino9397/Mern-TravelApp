@@ -91,7 +91,7 @@ const App = () => {
       onMove={(evt) => setViewState(evt.viewState)}
       mapStyle="mapbox://styles/yoshino9397/cl0owdyvc000a14ktyjdqkavl"
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-      onDblClick={handleAddClick}
+      onDblClick={currentUsername && handleAddClick}
     >
       {pins.map((p) => (
         <>
