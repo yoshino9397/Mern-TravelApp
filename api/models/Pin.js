@@ -23,6 +23,9 @@ const PinSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
+    img: {
+      type: String,
+    },
     long: {
       ///=longitude
       type: Number,

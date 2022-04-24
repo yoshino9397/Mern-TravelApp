@@ -6,10 +6,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./app.css";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import StarIcon from "@mui/icons-material/Star";
+import CancelIcon from "@mui/icons-material/Cancel";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Register from "./components/Register";
 import Login from "./components/Login";
 
 const App = () => {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const myStorage = window.localStorage;
   const [currentUsername, setCurrentUsername] = useState(
     myStorage.getItem("user")
@@ -18,6 +21,7 @@ const App = () => {
   const [title, setTitle] = useState(null);
   const [desc, setDesc] = useState(null);
   const [star, setStar] = useState(0);
+  const [file, setFile] = useState(null);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [pins, setPins] = useState([]);
   const [showRegister, setShowRegister] = useState(false);
@@ -66,6 +70,16 @@ const App = () => {
       lat: newPlace.lat,
       long: newPlace.long,
     };
+    if (file) {
+      const data = new FormData();
+      const fileName = Date.now() + file.name;
+      data.append("name", fileName);
+      data.append("file", file);
+      newPin.img = fileName;
+      try {
+        await axios.post("/upload", data);
+      } catch (err) {}
+    }
     try {
       const res = await axios.post("/pins", newPin);
       setPins([...pins, res.data]);
@@ -132,6 +146,10 @@ const App = () => {
                   <div className="stars">
                     {Array(p.rating).fill(<StarIcon className="star" />)}
                   </div>
+                  <label>Photo</label>
+                  <div className="photo">
+                    <img src={PF + p.img} alt="" className="image"/>
+                  </div>
                   <label>Info</label>
                   <span className="username">
                     Created by <b className="texts">{p.username}</b>
@@ -172,6 +190,34 @@ const App = () => {
                   <option value="4">4</option>
                   <option value="5">5</option>
                 </select>
+                <label>Photo</label>
+                <label htmlFor="file" className="shareOption">
+                  <AddCircleIcon
+                    className="add"
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  />
+                  <input
+                    style={{ display: "none" }}
+                    type="file"
+                    id="file"
+                    accept=".png,.jpeg,.jpg"
+                    onChange={(e) => setFile(e.target.files[0])}
+                  />
+                </label>
+                {file && (
+                  <div className="shareImgContainer">
+                    <img
+                      className="shareImg"
+                      src={URL.createObjectURL(file)}
+                      alt=""
+                    />
+                    <CancelIcon
+                      sx={{ color: "white" }}
+                      className="shareCancelImg"
+                      onClick={() => setFile(null)}
+                    />
+                  </div>
+                )}
                 <button className="submitButton" type="submit">
                   Add Pin
                 </button>
