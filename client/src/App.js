@@ -6,17 +6,16 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "./app.css";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import StarIcon from "@mui/icons-material/Star";
-import CancelIcon from "@mui/icons-material/Cancel";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import Loading from "./components/Loading";
 
 const App = () => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const myStorage = window.localStorage;
   const [currentUsername, setCurrentUsername] = useState(
     myStorage.getItem("user")
   );
+  const [loading, setLoading] = useState(false);
   const [newPlace, setNewPlace] = useState(null);
   const [title, setTitle] = useState(null);
   const [desc, setDesc] = useState(null);
@@ -62,28 +61,30 @@ const App = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newPin = {
-      username: currentUsername,
-      title,
-      desc,
-      rating: star,
-      lat: newPlace.lat,
-      long: newPlace.long,
-    };
-    if (file) {
-      const data = new FormData();
-      const fileName = Date.now() + file.name;
-      data.append("name", fileName);
-      data.append("file", file);
-      newPin.img = fileName;
-      try {
-        await axios.post("/upload", data);
-      } catch (err) {}
-    }
+    setLoading(true);
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "uploads");
+
     try {
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/dz47zx0rk/image/upload",
+        data
+      );
+      const { url } = uploadRes.data;
+      const newPin = {
+        username: currentUsername,
+        title,
+        desc,
+        img: url,
+        rating: star,
+        lat: newPlace.lat,
+        long: newPlace.long,
+      };
       const res = await axios.post("/pins", newPin);
       setPins([...pins, res.data]);
       setNewPlace(null);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -148,7 +149,7 @@ const App = () => {
                   </div>
                   <label>Photo</label>
                   <div className="photo">
-                    <img src={PF + p.img} alt="" className="image"/>
+                    <img src={p.img} alt="" className="image" />
                   </div>
                   <label>Info</label>
                   <span className="username">
@@ -191,33 +192,13 @@ const App = () => {
                   <option value="5">5</option>
                 </select>
                 <label>Photo</label>
-                <label htmlFor="file" className="shareOption">
-                  <AddCircleIcon
-                    className="add"
-                    sx={{ display: "flex", justifyContent: "center" }}
-                  />
+                <label className="shareOption">
                   <input
-                    style={{ display: "none" }}
                     type="file"
                     id="file"
-                    accept=".png,.jpeg,.jpg"
                     onChange={(e) => setFile(e.target.files[0])}
                   />
                 </label>
-                {file && (
-                  <div className="shareImgContainer">
-                    <img
-                      className="shareImg"
-                      src={URL.createObjectURL(file)}
-                      alt=""
-                    />
-                    <CancelIcon
-                      sx={{ color: "white" }}
-                      className="shareCancelImg"
-                      onClick={() => setFile(null)}
-                    />
-                  </div>
-                )}
                 <button className="submitButton" type="submit">
                   Add Pin
                 </button>
@@ -251,6 +232,7 @@ const App = () => {
             </button>
           </div>
         )}
+        {loading && <Loading />}
         {showRegister && <Register setShowRegister={setShowRegister} />}
         {showLogin && (
           <Login
