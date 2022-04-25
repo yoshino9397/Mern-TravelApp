@@ -9,6 +9,7 @@ import StarIcon from "@mui/icons-material/Star";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Loading from "./components/Loading";
+import $ from "jquery";
 
 const App = () => {
   const myStorage = window.localStorage;
@@ -65,7 +66,6 @@ const App = () => {
     const data = new FormData();
     data.append("file", file);
     data.append("upload_preset", "uploads");
-
     try {
       const uploadRes = await axios.post(
         "https://api.cloudinary.com/v1_1/dz47zx0rk/image/upload",
@@ -95,6 +95,11 @@ const App = () => {
     myStorage.removeItem("user");
   };
 
+  $("input").on("change", function () {
+    var file = $(this).prop("files")[0];
+    $(".shareOptionAdd").text(file.name);
+  });
+  
   return (
     <>
       <div className="topbar">
@@ -193,11 +198,15 @@ const App = () => {
                 </select>
                 <label>Photo</label>
                 <label className="shareOption">
+                  <label htmlFor="file" className="labelAdd">
+                    Add Pic
+                  </label>
                   <input
                     type="file"
                     id="file"
                     onChange={(e) => setFile(e.target.files[0])}
                   />
+                  <span className="shareOptionAdd">Not selected</span>
                 </label>
                 <button className="submitButton" type="submit">
                   Add Pin
